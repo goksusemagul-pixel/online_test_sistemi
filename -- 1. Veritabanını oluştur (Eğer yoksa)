@@ -1,0 +1,13 @@
+RewriteEngine On
+
+# Eğer dosyalar 'test-online' klasöründeyse burayı açın:
+RewriteBase /test-online/
+
+# Klasörlerin listelenmesini engelle (Güvenlik)
+Options -Indexes
+
+# SEO Dostu URL Yapısı (Kriter 18)
+# Örnek: localhost/test-online/sinav/matematik -> sinav_coz.php?slug=matematik olarak çalışır.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^sinav/([a-zA-Z0-9-]+)$ sinav_coz.php?slug=$1 [L,QSA]

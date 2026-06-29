@@ -1,0 +1,38 @@
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # 1. Resimler, CSS ve JS uzun süre kalsın (Performans için)
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+
+    # 2. AMA PHP ve HTML dosyaları ASLA önbelleklenmesin! (Sorununu çözen kısım)
+    ExpiresByType text/html "access plus 0 seconds"
+    ExpiresByType application/php "access plus 0 seconds"
+</IfModule>
+
+# Tarayıcıyı Zorla: PHP dosyalarını saklama!
+<FilesMatch "\.(php|html)$">
+    FileETag None
+    <IfModule mod_headers.c>
+        Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+    </IfModule>
+</FilesMatch>
+
+# --- SEO URL AYARLARI BAŞLANGICI ---
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # 1. Dosya veya klasör varsa direkt aç (Resimler, CSS vb. bozulmasın)
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    # 2. .php uzantısını gizle (adres çubuğunda .php yazmasın)
+    RewriteRule ^([^\.]+)$ $1.php [NC,L]
+</IfModule>
+# --- SEO URL AYARLARI BİTİŞİ ---
